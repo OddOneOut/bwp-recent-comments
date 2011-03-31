@@ -1,9 +1,9 @@
-=== Plugin Name ===
+=== Better WordPress Recent Comments ===
 Contributors: OddOneOut
 Donate link: http://betterwp.net/wordpress-plugins/bwp-recent-comments/
 Tags: comments, recent comments, recent comments widgets
 Requires at least: 2.8
-Tested up to: 3.1
+Tested up to: 3.1.1
 Stable tag: 1.0.0
 
 This plugin displays recent comment lists at assigned locations, with comprehensive support for widgets.
@@ -28,7 +28,9 @@ A recent comment list, in my opinion, can help stimulate discussion and explorat
 * Possibility to trim comment to a specific number of words
 * Possibility to split long words into smaller chunks
 * WordPress Multi-site compatible (not tested with WPMU)
-* And [more](http://betterwp.net/wordpress-plugins/bwp-recent-comments/)...!
+* And more...
+
+Visit [Plugin's Official Page](http://betterwp.net/wordpress-plugins/bwp-recent-comments/) for more information!
 
 == Installation ==
 
@@ -45,9 +47,8 @@ A recent comment list, in my opinion, can help stimulate discussion and explorat
 
 == Screenshots ==
 
-1. screenshot-1.png
-1. screenshot-2.png
-1. screenshot-3.png
+1. Showing recent comments using customizable widget
+2. The configuration page
 
 == Changelog ==
 
