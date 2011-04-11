@@ -44,10 +44,12 @@ class BWP_RC_Widget extends WP_Widget
 
 		$use_settings = (isset($new_instance['use_settings'])) ? true : false;
 		$instances = $bwp_rc->get_instances();
-		
+		if (isset($new_instance['instance']))
+			$new_instance['instance'] = $bwp_rc->format_instance_name($new_instance['instance']);
+
 		if ($use_settings == true)
 		{
-			$the_instance = 'bwp_rc_instance_' . str_replace(' ', '_', trim($new_instance['instance']));
+			$the_instance = 'bwp_rc_instance_' . str_replace(' ', '_', $new_instance['instance']);
 			if (!empty($instances[$the_instance]))
 				$instance = $instances[$the_instance];
 			else
@@ -83,7 +85,7 @@ class BWP_RC_Widget extends WP_Widget
 
 		$instance = wp_parse_args((array) $instance, $bwp_rc->get_default_parameters());
 		$instance_name = strip_tags($instance['instance']);
-		$title = strip_tags($instance['title']);
+		$title = (isset($instance['title'])) ? strip_tags($instance['title']) : '';
 		$limit = (int) $instance['limit'];
 		$tb_limit = (int) $instance['tb_limit'];
 		$post_types = get_post_types(array('public' => true), 'objects');

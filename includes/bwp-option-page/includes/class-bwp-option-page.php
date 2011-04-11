@@ -125,7 +125,7 @@ class BWP_OPTION_PAGE {
 			else if ('float' == $option_formats[$key])
 				$_POST[$key] = (float) $_POST[$key];
 			else if ('html' == $option_formats[$key])
-				$_POST[$key] = wp_filter_kses($_POST[$key]);
+				$_POST[$key] = wp_filter_post_kses($_POST[$key]);
 		}
 		else
 			$_POST[$key] = strip_tags($_POST[$key]);
@@ -388,7 +388,7 @@ class BWP_OPTION_PAGE {
 		echo $return_str;		
 		do_action('bwp_option_action_before_submit_button');		
 		$return_str = '';
-		$return_str .= '<p class="submit"><input type="submit" class="button-primary" name="submit_' . $this->form_name . '" value="' . __('Save Changes') . '" /></p>' . "\n";			
+		$return_str .= apply_filters('bwp_option_submit_button', '<p class="submit"><input type="submit" class="button-primary" name="submit_' . $this->form_name . '" value="' . __('Save Changes') . '" /></p>') . "\n";
 		$return_str .= '</form>' . "\n";		
 		$return_str .= '</div>' . "\n";
 		

@@ -4,7 +4,7 @@ Donate link: http://betterwp.net/wordpress-plugins/bwp-recent-comments/
 Tags: comments, recent comments, recent comments widgets
 Requires at least: 2.8
 Tested up to: 3.1.1
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 
 This plugin displays recent comment lists at assigned locations, with comprehensive support for widgets.
 
@@ -30,6 +30,10 @@ A recent comment list, in my opinion, can help stimulate discussion and explorat
 * WordPress Multi-site compatible (not tested with WPMU)
 * And more...
 
+**Languages**
+
+* This plugin is currently available only in English. Please [help translate](http://betterwp.net/wordpress-tips/create-pot-file-using-poedit/) it!
+
 Visit [Plugin's Official Page](http://betterwp.net/wordpress-plugins/bwp-recent-comments/) for more information!
 
 == Installation ==
@@ -52,10 +56,22 @@ Visit [Plugin's Official Page](http://betterwp.net/wordpress-plugins/bwp-recent-
 
 == Changelog ==
 
+= 1.0.1 =
+* Fixed the bug that strips legit HTML tags in comment templates. Thanks to [Mike McKoy](http://www.hairwegoproducts.com/)!
+* Fixed the bug that prevents empty comment templates.
+* Fixed the widget class so that it functions more expectedly.
+* Fixed some minor bugs that might cause notice or warning messages. Thanks to **Konstantin**!
+* Added a reset instances button that will reset all malformed instances caused by 1.0.0's bugs.
+* It is now possible to have HTML in 'no comment' and 'stripped comment' message.
+* Comments that belong to trashed posts are no longer included in comment lists.
+
 = 1.0.0 =
 * Initial Release.
 
 == Upgrade Notice ==
+
+= 1.0.1 =
+* A critical bug fix release, all users are advised to update immediately!
 
 = 1.0.0 =
 * Enjoy the plugin!

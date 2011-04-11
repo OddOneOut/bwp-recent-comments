@@ -70,7 +70,7 @@ class BWP_RC extends BWP_FRAMEWORK {
 	/**
 	 * Constructor
 	 */	
-	function __construct($version = '1.0.0')
+	function __construct($version = '1.0.1')
 	{
 		// Plugin's title
 		$this->plugin_title = 'BetterWP Recent Comments';
@@ -101,7 +101,7 @@ class BWP_RC extends BWP_FRAMEWORK {
 			'input_trimmed'			=> __('This %s has been trimmed to empty.', 'bwp-rc'),
 			'template_comment' 		=> '<li class="recent-comment"><span class="recent-comment-avatar">%avatar%</span><span class="recent-comment-single"><span class="recent-comment-author">%author%</span><span class="recent-comment-text"> { %excerpt% } &ndash; </span> <a href="%link%" title="%post_title_attr%"><strong>%time%</strong></a></span></li>',
 			'template_owner' 		=> '',
-			'template_tbpb' 		=> '<li class="recent-comment recent-comment-tb"><span class="recent-comment-single"><span class="recent-comment-author"><a href="%author_url%"><strong>%author%</strong></a></span><span class="recent-comment-text"> { %excerpt% }</span></span></li>'
+			'template_tbpb' 		=> '<li class="recent-comment recent-comment-tb"><span class="recent-comment-single"><span class="recent-comment-author"><a href="%author_url%"><strong>%author%</strong></a></span><span class="recent-comment-text"> { %excerpt% } </span></span></li>'
 		);
 
 		$this->build_properties('BWP_RC', 'bwp-rc', $options, 'BetterWP Recent Comments', dirname(dirname(__FILE__)) . '/bwp-recent-comments.php', 'http://betterwp.net/wordpress-plugins/bwp-recent-comments/', false);
@@ -127,11 +127,9 @@ class BWP_RC extends BWP_FRAMEWORK {
 		define('BWP_RC_LIST', 'bwp_rc_list');
 		
 		// initialize instances
-		if (!$db_instances = get_option(BWP_RC_INSTANCES))
-		{
-			$this->instances = array(BWP_RC_LIST => array());
-			update_option(BWP_RC_INSTANCES, $this->instances);
-		}
+		$db_instances = get_option(BWP_RC_INSTANCES);
+		if (!$db_instances || !is_array($db_instances))
+			$this->reset_instances();
 		else
 			$this->instances = $db_instances;
 	}
@@ -285,7 +283,6 @@ if (!empty($page))
 			'inline_fields' => array(
 				'cb1' => array('input_gravatar_width' => 'input')
 			)
-			
 		);
 
 		// Get the default options
@@ -294,7 +291,7 @@ if (!empty($page))
 		// Get option from the database
 		$options = $bwp_option_page->get_db_options($page, $options);
 		
-		$option_formats = array('input_comments' => 'int', 'input_tbs' => 'int', 'input_gravatar_width' => 'int', 'input_trim' => 'int', 'input_chunk' => 'int');
+		$option_formats = array('input_comments' => 'int', 'input_tbs' => 'int', 'input_gravatar_width' => 'int', 'input_trim' => 'int', 'input_chunk' => 'int', 'input_no_found' => 'html', 'input_trimmed' => 'html');
 	}
 	else if ($page == BWP_RC_OPTION_TEMPLATE)
 	{
@@ -363,39 +360,54 @@ if (!empty($page))
 
 		// Option Structures - Form
 		$form = array(
-			'items'			=> array('heading', 'select'),
+			'items'			=> array('heading', 'select', 'heading'),
 			'item_labels'	=> array
 			(
 				__('List of all instances you have created', 'bwp-rc'),
-				__('Choose an instance to delete', 'bwp-rc')
+				__('Choose an instance to delete', 'bwp-rc'),
+				__('Reset all instances', 'bwp-rc')
 			),
-			'item_names'	=> array('h1', 'sel1'),
+			'item_names'	=> array('h1', 'sel1', 'h2'),
 			'heading'			=> array(
-				'h1'	=> __('Here you can see all instances you have created and currently you can delete any instance you don\'t use anymore.', 'bwp-rc')
+				'h1'	=> __('Here you can see all instances you have created and currently you can delete any instance you don\'t use anymore.', 'bwp-rc'),
+				'h2'	=> __('If for some reasons you can not delelete an instance above (mostly because of malformed instances produced by previous versions\' bugs), you will have to reset all your instances here. Don\'t worry, though, all instances should be re-created automatically after you refresh public pages with comment instances on them.', 'bwp-rc')
 			),
 			'select'		=> array
 			(
 				'sel1' => array(__('----------', 'bwp-rc') => '')
+			),
+			'container'		=> array
+			(
+				'sel1' 	=> __('<input type="submit" class="button" name="delete_instance" value="' . __('Delete the selected instance', 'bwp-rc') . '" />', 'bwp-rc'),
+				'h2' 	=> __('<input type="submit" class="button" name="reset_instances" value="' . __('Reset all instances now!', 'bwp-rc') . '" />', 'bwp-rc')
 			)
 		);
 
-		if (isset($_POST['submit_' . $bwp_option_page->get_form_name()]) && !empty($_POST['sel1']))
+		if (isset($_POST['delete_instance']) && !empty($_POST['sel1']) && isset($this->instances[$_POST['sel1']]))
 		{
 			check_admin_referer($page);
-			delete_option($this->instances[$_POST['sel1']]);
+			delete_option($_POST['sel1']);
 			unset($this->instances[$_POST['sel1']]);
-			update_option(BWP_RC_INSTANCES, $this->instances);			
+			update_option(BWP_RC_INSTANCES, $this->instances);
 		}
-		
+		else if (isset($_POST['reset_instances']))
+			$this->reset_instances();
+
 		$options = NULL;
+
+		// @since 1.0.1
+		if (!is_array($this->instances))
+			$this->reset_instances();
 
 		foreach ($this->instances as $instance_name => $instance)
 		{
 			if ($instance_name != BWP_RC_LIST)
-				$form['select']['sel1'][str_replace('bwp_rc_instance_', '', $instance_name)] = $instance_name;
+				$form['select']['sel1'][$this->str_replace_first('bwp_rc_instance_', '', $instance_name)] = $instance_name;
 		}
 
 		$option_formats = array();
+		
+		add_filter('bwp_option_submit_button', create_function('', 'return "";'));
 	}
 }
 
@@ -414,7 +426,9 @@ if (!empty($page))
 				else if (isset($option_formats[$key]) && empty($_POST[$key]) && 'int' == $option_formats[$key])
 					$option = $this->options_default[$key];
 				else if (!empty($_POST[$key]))
-					$option = trim(stripslashes($_POST[$key]));				
+					$option = trim(stripslashes($_POST[$key]));
+				else
+					$option = '';
 			}
 			update_option($page, $options);
 			// Do this for this plugin only
@@ -429,6 +443,36 @@ if (!empty($page))
 		
 		// update the comment list automatically
 		do_action('bwp_rc_form_loaded');
+	}
+
+	/**
+	 * Make the instance name db safe
+	 *
+	 * @since 1.0.1
+	 */
+	function format_instance_name($name = '')
+	{
+		$name = trim(strtolower($name));
+		return preg_replace('/[^a-z0-9-_\s]/ui', '', $name);
+	}
+
+	/**
+	 * Reset all instances to its safe point
+	 *
+	 * @since 1.0.1
+	 */
+	function reset_instances()
+	{
+		$this->instances = array(BWP_RC_LIST => array());
+		update_option(BWP_RC_INSTANCES, $this->instances);
+	}
+
+	function str_replace_first($search, $replace, $subject)
+	{
+		$pos = strpos($subject, $search);
+		if ($pos !== false)
+			$subject = substr_replace($subject, $replace, $pos, strlen($search));
+		return $subject;
 	}
 
 	function get_instances()
@@ -612,10 +656,10 @@ if (!empty($page))
 		$parameters = array('post_type' => $post_type, 'comment_type' => $comment_type, 'separate' => $separate, 'limit' => $limit, 'tb_limit' => $tb_limit, 'order' => $order);
 
 		// Determine whether this is a global list or a unique list
-		$instance = strtolower($instance);
+		$instance = $this->format_instance_name($instance);
 		$the_instance = $instance;
 		if (!empty($instance))
-			$instance = 'bwp_rc_instance_' . str_replace(' ', '_', trim($instance));
+			$instance = 'bwp_rc_instance_' . str_replace(' ', '_', $instance);
 		else
 			$instance = BWP_RC_LIST;
 
@@ -658,8 +702,8 @@ if (!empty($page))
 					if (sizeof($saved_output) == 0)
 						$output = $this->get_recent_comments(false, true, $the_instance, $saved_parameters['post_type'], $comment_type, $saved_parameters['separate'], $saved_parameters['limit'], $saved_parameters['tb_limit'], $order);
 					else
-					{						
-						if (!empty($order) && ($saved_parameters['order'] != $order || (BWP_RC_LIST == $instance && $order != $this->options['select_order'])))
+					{
+						if ('asc' == $order)
 							$saved_output = $this->sort_comments($saved_output, 'asc');
 						foreach ($saved_output as $comment)
 						{
@@ -686,6 +730,10 @@ if (!empty($page))
 		}
 
 		$returned_output = '';
+
+		// @since 1.0.1
+		if (!is_array($this->instances))
+			$this->reset_instances();
 
 		// We need to refresh the list so we will refresh all instances (if needed)
 		foreach ($this->instances as $instance_name => $instance_data)
@@ -734,17 +782,18 @@ if (!empty($page))
 			$bwp_query 	= 'SELECT *
 						FROM ' . $wpdb->comments . ' wpcoms
 							INNER JOIN ' . $wpdb->posts . ' wpposts
-								ON (wpcoms.comment_post_ID = wpposts.ID '
+								ON (wpcoms.comment_post_ID = wpposts.ID' . "
+									AND wpposts.post_status <> 'trash'"
 								. $post_type_sql . ')
 						WHERE comment_approved = 1 '
 						 	. $comment_type_sql . ' '
 							. $owner_sql . '
 							ORDER BY comment_date DESC
 							LIMIT ' . $limit;
-			// do the query	
+			// do the query			
 			$bwp_qobj 	= $wpdb->get_results($bwp_query, ARRAY_A);
 			// sort the first result set
-			$bwp_qobj	= $this->sort_comments($bwp_qobj, $order);
+			/*$bwp_qobj	= $this->sort_comments($bwp_qobj, $order);*/
 
 			// if we are separating, do the second query here
 			if ($separate == true)
@@ -754,7 +803,8 @@ if (!empty($page))
 				$bwp_query 	= 'SELECT *
 						FROM ' . $wpdb->comments . ' wpcoms
 							INNER JOIN ' . $wpdb->posts . ' wpposts
-								ON (wpcoms.comment_post_ID = wpposts.ID '
+								ON (wpcoms.comment_post_ID = wpposts.ID' . "
+									AND wpposts.post_status <> 'trash'"
 								. $post_type_sql . ')
 						WHERE comment_approved = 1 '
 						 	. $comment_type_sql . ' '
@@ -764,7 +814,7 @@ if (!empty($page))
 				// do the query
 				$bwp_qobj_tb = $wpdb->get_results($bwp_query, ARRAY_A);
 				// sort the second result set
-				$bwp_qobj_tb = $this->sort_comments($bwp_qobj_tb, $order);
+				/*$bwp_qobj_tb = $this->sort_comments($bwp_qobj_tb, $order);*/
 				// merge the two query results
 				$bwp_qobj = array_merge($bwp_qobj, $bwp_qobj_tb);
 			}
