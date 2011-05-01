@@ -6,12 +6,20 @@
 
 .recent-comment:after { content: "."; display: block; height: 0; font-size: 0; line-height: 0; clear: both; visibility: hidden; }
 
+.recent-comment .recent-comment-avatar {
+	display: block;
+	float: left;
+	line-height: 1em;
+	padding: 5px 0 0 0px;
+	width: 40px;
+}
+
 .recent-comment .avatar {
 	width: 40px;
 	height: 40px;
 	padding: 0px;
 	border: none;
-	margin: 0 10px 0 0;
+	margin: 0;
 }
 
 .recent-comment .icon-comment {

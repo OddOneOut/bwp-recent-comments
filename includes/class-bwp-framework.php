@@ -188,12 +188,13 @@ class BWP_FRAMEWORK {
 <p>
 <input type="hidden" name="cmd" value="_s-xclick">
 <input type="hidden" name="hosted_button_id" value="B65WHYLRWWCGE">
+<input type="hidden" name="item_name" value="Donate to <?php esc_attr_e($this->plugin_title); ?>">
 <select name="os0" style="margin: 0px;">
-	<option value="One cup">One cup $10.00</option>
-	<option value="Two cups">Two cups $20.00</option>
-	<option value="Five cups!">Five cups! $50.00</option>
+	<option value="One cup">One cup $5.00</option>
+	<option value="Two cups">Two cups $10.00</option>
+	<option value="Five cups!">Five cups! $25.00</option>
 </select>
-<input class="paypal-submit" type="image" src="http://betterwp.net/images/icon-paypal.gif" border="0" name="submit" alt="Via PayPal!">
+<input class="paypal-submit" type="image" src="<?php echo plugin_dir_url($this->plugin_file) . 'includes/bwp-option-page/images/icon-paypal.gif'; ?>" border="0" name="submit" alt="Via PayPal!">
 <input type="hidden" name="currency_code" value="USD">
 <img alt="" border="0" src="https://www.paypalobjects.com/WEBSCR-640-20110306-1/en_US/i/scr/pixel.gif" width="1" height="1">
 </p>

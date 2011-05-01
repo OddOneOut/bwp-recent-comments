@@ -25,7 +25,7 @@ class BWP_RC_Widget extends WP_Widget
 		echo $before_widget;
 		if ($title)
 			echo $before_title . $title . $after_title . "\n";
-			
+
 		if (function_exists('bwp_get_recent_comments'))
 		{
 ?>
@@ -47,7 +47,7 @@ class BWP_RC_Widget extends WP_Widget
 		if (isset($new_instance['instance']))
 			$new_instance['instance'] = $bwp_rc->format_instance_name($new_instance['instance']);
 
-		if ($use_settings == true)
+		if (true == $use_settings)
 		{
 			$the_instance = 'bwp_rc_instance_' . str_replace(' ', '_', $new_instance['instance']);
 			if (!empty($instances[$the_instance]))
@@ -64,18 +64,19 @@ class BWP_RC_Widget extends WP_Widget
 			$instance['separate'] = (isset($new_instance['separate'])) ? true : false;
 		}
 
-		$instance['title'] = strip_tags($new_instance['title']);
-		$instance['instance'] = strip_tags($new_instance['instance']);
+		$instance['post_id'] = trim($instance['post_id']);
 		$instance['limit'] = (int) $instance['limit'];
 		$instance['tb_limit'] = (int) $instance['tb_limit'];
 		$tb_limit = (empty($instance['tb_limit']) && !empty($bwp_rc->options['input_tbs'])) ? $bwp_rc->options['input_tbs'] : $instance['tb_limit'];		
 		$instance['separate'] = (!empty($tb_limit) && $instance['separate'] == true) ? true : false;
-						
+		$instance['title'] = strip_tags($new_instance['title']);
+		$instance['instance'] = strip_tags($new_instance['instance']);
+
 		if (!empty($instance['instance']))
 			bwp_get_recent_comments($instance, false, true);
 		else
 			$bwp_rc->clear_recent_comment_cache();
-		
+
 		return $instance;
 	}
 
@@ -89,11 +90,12 @@ class BWP_RC_Widget extends WP_Widget
 		$limit = (int) $instance['limit'];
 		$tb_limit = (int) $instance['tb_limit'];
 		$post_types = get_post_types(array('public' => true), 'objects');
+		$post_id = $instance['post_id'];
 ?>
 		<div class="bwp-rc-widget-control">
 		<p><?php _e('<strong>Note:</strong> All inputs are optional.', 'bwp-rc'); ?></p>
 		<p><label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:', 'bwp-rc'); ?></label> <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo esc_attr($title); ?>" /></p>
-		<p><label for="<?php echo $this->get_field_id('instance'); ?>"><?php _e('Instance Name:', 'bwp-rc'); ?></label> <input class="widefat" id="<?php echo $this->get_field_id('instance'); ?>" name="<?php echo $this->get_field_name('instance'); ?>" type="text" value="<?php echo esc_attr($instance_name); ?>" /></p>
+		<p><label for="<?php echo $this->get_field_id('instance'); ?>"><?php _e('Instance Name (no special characters):', 'bwp-rc'); ?></label> <input class="widefat" id="<?php echo $this->get_field_id('instance'); ?>" name="<?php echo $this->get_field_name('instance'); ?>" type="text" value="<?php echo esc_attr($instance_name); ?>" /></p>
 		<p>
 			<input class="checkbox bwp-rc-instance-switch" type="checkbox" checked="checked" id="<?php echo $this->get_field_id('use_settings'); ?>" name="<?php echo $this->get_field_name('use_settings'); ?>" /> <label for="<?php echo $this->get_field_id('use_settings'); ?>"><?php _e('Use saved settings for this instance', 'bwp-rc'); ?></label>
 		</p>
@@ -109,6 +111,9 @@ class BWP_RC_Widget extends WP_Widget
 			</select>
 		</p>
 		<p>
+			<label for="<?php echo $this->get_field_id('post_id'); ?>"><?php _e('Post ID or name (slug)', 'bwp-rc'); ?> <input class="smallfat" style="width: 180px;" id="<?php echo $this->get_field_id('post_id'); ?>" name="<?php echo $this->get_field_name('post_id'); ?>" type="text" value="<?php echo esc_attr($post_id); ?>" /></label>
+		</p>
+		<p>
 			<label for="<?php echo $this->get_field_id('comment_type'); ?>"><?php _e('Comment Type:', 'bwp-rc'); ?></label>
 			<select id="<?php echo $this->get_field_id('comment_type'); ?>" name="<?php echo $this->get_field_name('comment_type'); ?>">
 				<option value="all"><?php _e('&mdash; Select a Comment Type &mdash;', 'bwp-rc'); ?></option>
@@ -117,14 +122,14 @@ class BWP_RC_Widget extends WP_Widget
 			</select>
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id('order'); ?>"><?php _e('Show'); ?></label>
+			<label for="<?php echo $this->get_field_id('order'); ?>"><?php _e('Show', 'bwp-rc'); ?></label>
 			<select id="<?php echo $this->get_field_id('order'); ?>" name="<?php echo $this->get_field_name('order'); ?>">
 				<option value="desc" <?php selected($instance['order'], 'desc' ); ?>><?php _e('Newer comments first', 'bwp-rc'); ?></option>
 				<option value="asc" <?php selected($instance['order'], 'asc' ); ?>><?php _e('Older comments first', 'bwp-rc'); ?></option>
 			</select>
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id('limit'); ?>"><?php _e('Show'); ?> <input class="smallfat" id="<?php echo $this->get_field_id('limit'); ?>" name="<?php echo $this->get_field_name('limit'); ?>" type="text" value="<?php echo esc_attr($limit); ?>" /> <?php _e('comments and', 'bwp-rc'); ?></label>
+			<label for="<?php echo $this->get_field_id('limit'); ?>"><?php _e('Show', 'bwp-rc'); ?> <input class="smallfat" id="<?php echo $this->get_field_id('limit'); ?>" name="<?php echo $this->get_field_name('limit'); ?>" type="text" value="<?php echo esc_attr($limit); ?>" /> <?php _e('comments and', 'bwp-rc'); ?></label>
 			<label for="<?php echo $this->get_field_id('tb_limit'); ?>"><input class="smallfat" id="<?php echo $this->get_field_id('tb_limit'); ?>" name="<?php echo $this->get_field_name('tb_limit'); ?>" type="text" value="<?php echo esc_attr($tb_limit); ?>" />  <?php _e('trackbacks'); ?></label>
 		</p>
 		<p>
