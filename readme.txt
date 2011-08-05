@@ -1,10 +1,10 @@
 === Better WordPress Recent Comments ===
 Contributors: OddOneOut
 Donate link: http://betterwp.net/wordpress-plugins/bwp-recent-comments/#contributions
-Tags: comments, recent comments, recent comments widgets
+Tags: comments, recent comments, recent comments widgets, wordpress recent comments
 Requires at least: 2.8
-Tested up to: 3.1.2
-Stable tag: 1.1.0
+Tested up to: 3.2.1
+Stable tag: 1.2.0
 
 This plugin displays recent comment lists at assigned locations, with comprehensive support for widgets.
 
@@ -14,16 +14,28 @@ This plugin displays recent comment lists at assigned locations. It does not add
 
 A recent comment list, in my opinion, can help stimulate discussion and exploration of your blog tremendously. Now for the past few months I have been using a plugin called Get Recent Comments; though this plugin is configurable and indeed popular, the code is somehow messy and no support for custom post type is found. The worst thing is Get Recent Comment doesn't seem to be updated anymore, so I decide to write another recent comment plugin which is more lightweight and makes use of some nice features provided by WordPress 3.0.
 
-**New Features in 1.1.0**
+**BWP Recent Comments 1.2.0 RC1 - Your recent comment lists just got better!**
 
-* You can now show comments on a separate page, with pagination and custom template!
-* Get comments from a specific post, using either ID or post name (slug).
-* Trim post title to a certain number of words.
+* You can now group comments by post (inspired by the classic Get Recent Comments plugin).
+* You can now have AJAX navigation for any recent comment list you want! Comment list on a separate page also supports AJAX.
+* Templates are available for both grouped comment lists and the AJAX navigation.
+* Added a shortcode (`[bwp-rc]`) to show recent comment lists on a separate page.
+* More template tags for you to use:
+	* `%author_archive%`: link to a comment author's archive page if found.
+	* `%comment_count%`: the number of comments for the current post.
+	* `%comment_number%`: a comment's number in the list, e.g. 1, 2, 3, etc. Useful when showing comments on a separate page.
+* Added a new CSS file that will be used when you disable avatar.
+* Now uses `date_i18n` function for comment date so that it can be localized by default.
+* A lot of bug fixes and other improvements which make the plugin much faster and more stable!
+
+**Note:** Due to the complexity of this new release, feedbacks are greatly appreciated! If you have any problem, even the smallest, please [contact me](http://betterwp.net/contact/). Thanks!
 
 **Other Features**
 
 * Has the options to show comment only, trackback only, or show both (separately or all together)
+* Get comments from a specific post, using either ID or post name (slug).
 * Possibility to add different comment lists with different settings on one page
+* You can show comments on a separate page, with pagination and custom template!
 * You can sort comment lists descendingly or ascendingly
 * Supports custom post type
 * Supports Gravatar
@@ -31,6 +43,7 @@ A recent comment list, in my opinion, can help stimulate discussion and explorat
 * Widget-ready
 * Template functions ready
 * Generate Zero SQL query for end-users
+* Possibility to trim post title to a certain number of words.
 * Possibility to trim comment to a specific number of words
 * Possibility to split long words into smaller chunks
 * WordPress Multi-site compatible (not tested with WPMU)
@@ -43,7 +56,12 @@ A recent comment list, in my opinion, can help stimulate discussion and explorat
 
 **Languages**
 
-* This plugin is currently available only in English. Please [help translate](http://betterwp.net/wordpress-tips/create-pot-file-using-poedit/) it!
+* English (default)
+* French 1.1.0 (fr_FR) - Thanks to [Maître Mô](http://maitremo.fr)!
+* Russian 1.1.0 (ru_RU) - Thanks to Konstantin (kg69design)!
+* Ukrainian 1.1.0 (ua_UA) - Thanks to Konstantin (kg69design)!
+
+Please [help translate](http://betterwp.net/wordpress-tips/create-pot-file-using-poedit/) this plugin!
 
 Visit [Plugin's Official Page](http://betterwp.net/wordpress-plugins/bwp-recent-comments/) for more information!
 
@@ -64,9 +82,30 @@ Visit [Plugin's Official Page](http://betterwp.net/wordpress-plugins/bwp-recent-
 
 1. Showing recent comments using customizable widget
 2. Paginated comment list on a separate page with custom template
-3. The configuration page
+3. AJAX navigation in a widget (WordPress 3.2's Twenty Eleven Theme)
+4. Recent comments grouped by posts
+5. The configuration page
 
 == Changelog ==
+
+= 1.2.0 RC1 =
+* You can now group comments by post, this is inspired by the classic Get Recent Comment plugin.
+* You can now have AJAX navigation for any recent comment list you want! Comment list on a separate page also supports AJAX.
+* Templates available for both grouped comments and the AJAX navigation.
+* Added a shortcode (`[bwp-rc]`) to show recent comment lists on a separate page.
+* More template tags for you to use:
+	* `%author_archive%`: link to a comment author's archive page if found.
+	* `%comment_count%`: the number of comments for the current post.
+	* `%comment_number%`: a comment's number in the list, e.g. 1, 2, 3, etc. Useful when showing comments on a separate page.
+* Added a new CSS file that will be used when you disable avatar.
+* Added a new filter using which you can apply your own default avatar.
+* A lot of bug fixes and other improvements which make the plugin much faster and more stable!
+
+Check out the [release announcement](http://betterwp.net/293-bwp-recent-comments-1-2-0/) for more information!
+
+**Note:** Due to the complexity of this new release, feedbacks are greatly appreciated! If you have any problem, even the smallest, please [contact me](http://betterwp.net/contact/). Thanks!
+
+**Note to translators**: There are a lot of text changes in this version, please update your translations when you have time, thanks!
 
 = 1.1.0 =
 * You can now show comments on a separate page, with pagination and custom template!
