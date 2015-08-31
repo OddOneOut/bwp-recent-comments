@@ -797,7 +797,7 @@ if (!empty($page))
 			) : $comment['author'];
 		// Avatar
 		$avatar_width = (!empty($this->options['input_gravatar_width'])) ? $this->options['input_gravatar_width'] : $this->options_default['input_gravatar_width'];
-		$comment['avatar'] 	= ($this->options['enable_gravatars'] == 'yes') ? get_avatar($commentdata['comment_author_email'], $avatar_width, apply_filters('bwp_rc_default_avatar', NULL), __('User Avatar', 'bwp-rc')) : '';
+		$comment['avatar'] 	= ($this->options['enable_gravatars'] == 'yes') ? get_avatar( (object) $commentdata, $avatar_width, apply_filters('bwp_rc_default_avatar', NULL), __('User Avatar', 'bwp-rc')) : '';
 		// Links to post or comment page - @since 1.1.0
 		$comment['post_link'] = get_permalink($commentdata['comment_post_ID']);
 		$comment['link'] 	= get_comment_link($commentdata['comment_ID'], array('type' => 'comment'));
