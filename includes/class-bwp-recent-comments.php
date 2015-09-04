@@ -152,7 +152,7 @@ class BWP_RC extends BWP_FRAMEWORK {
 			'template_paged_comment'=> '<li class="recent-comment"><span class="recent-comment-avatar">%avatar%</span><span class="recent-comment-single"><span class="recent-comment-author">%author%</span><span class="recent-comment-text"> { %excerpt% } &ndash; </span> <a href="%link%" title="%post_title_attr%"><strong>%time%</strong></a></span></li>',
 			'template_owner' 		=> '',
 			'template_tbpb' 		=> '<li class="recent-comment recent-comment-tb"><span class="recent-comment-single"><span class="recent-comment-author"><a href="%author_url%"><strong>%author%</strong></a></span><span class="recent-comment-text"> { %excerpt% } </span></span></li>',
-			'template_group_header'	=> '<li><strong><a href="%post_link%" title="%post_title_attr%">%post_title%</a> (<a href="#" title="' . __('This post has a total of %comment_count% comment(s)', 'bwp-rc') . '">%comment_count%</a>)</strong><ul>',
+			'template_group_header'	=> '<li><strong><a href="%post_link%" title="%post_title_attr%">%post_title%</a> (<a href="%post_link%#comments" title="' . __('This post has a total of %comment_count% comment(s)', 'bwp-rc') . '">%comment_count%</a>)</strong><ul>',
 			'template_group_footer' => '</ul></li>',
 			'template_ajax_older'	=> '<a title="' . __('View older comments', 'bwp-rc') . '" href="#" class="bwp-rc-older-nav">' . __('Older &raquo;', 'bwp-rc') . '</a>',
 			'template_ajax_newer'	=> '<a title="' . __('View newer comments', 'bwp-rc') . '" href="#" class="bwp-rc-newer-nav">' . __('&laquo; Newer', 'bwp-rc') . '</a>'
